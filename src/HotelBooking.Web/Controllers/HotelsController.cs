@@ -11,55 +11,55 @@ namespace HotelBooking.Web.Controllers;
 public class HotelsController(IHotelService hotelService, IRoomService roomService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<HotelModel>>> GetAll()
+    public async Task<ActionResult<IEnumerable<HotelModel>>> GetAll(CancellationToken cancellationToken)
     {
-        var hotels = await hotelService.GetAllHotelsAsync();
+        var hotels = await hotelService.GetAllHotelsAsync(cancellationToken);
         return Ok(hotels);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<HotelModel>> GetById(int id)
+    public async Task<ActionResult<HotelModel>> GetById(int id, CancellationToken cancellationToken)
     {
-        var hotel = await hotelService.GetHotelByIdAsync(id);
+        var hotel = await hotelService.GetHotelByIdAsync(id, cancellationToken);
         if (hotel == null)
             return NotFound();
         return Ok(hotel);
     }
 
     [HttpGet("{id:int}/rooms")]
-    public async Task<ActionResult<IEnumerable<RoomModel>>> GetRooms(int id)
+    public async Task<ActionResult<IEnumerable<RoomModel>>> GetRooms(int id, CancellationToken cancellationToken)
     {
-        var hotel = await hotelService.GetHotelByIdAsync(id);
+        var hotel = await hotelService.GetHotelByIdAsync(id, cancellationToken);
         if (hotel == null)
             return NotFound();
 
-        var rooms = await roomService.GetRoomsByHotelAsync(id);
+        var rooms = await roomService.GetRoomsByHotelAsync(id, cancellationToken);
         return Ok(rooms);
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<HotelModel>>> SearchByCity([FromQuery] string city)
+    public async Task<ActionResult<IEnumerable<HotelModel>>> SearchByCity([FromQuery] string city, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(city))
             return BadRequest("City is required");
 
-        var hotels = await hotelService.GetHotelsByCityAsync(city);
+        var hotels = await hotelService.GetHotelsByCityAsync(city, cancellationToken);
         return Ok(hotels);
     }
 
     [HttpPost]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<HotelModel>> Create([FromBody] CreateHotelModel model)
+    public async Task<ActionResult<HotelModel>> Create([FromBody] CreateHotelModel model, CancellationToken cancellationToken)
     {
-        var hotel = await hotelService.CreateHotelAsync(model);
+        var hotel = await hotelService.CreateHotelAsync(model, cancellationToken);
         return CreatedAtAction(nameof(GetById), new { id = hotel.Id }, hotel);
     }
 
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<HotelModel>> Update(int id, [FromBody] UpdateHotelModel model)
+    public async Task<ActionResult<HotelModel>> Update(int id, [FromBody] UpdateHotelModel model, CancellationToken cancellationToken)
     {
-        var hotel = await hotelService.UpdateHotelAsync(id, model);
+        var hotel = await hotelService.UpdateHotelAsync(id, model, cancellationToken);
         if (hotel == null)
             return NotFound();
         return Ok(hotel);
@@ -67,9 +67,9 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "Administrator")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
-        var result = await hotelService.DeleteHotelAsync(id);
+        var result = await hotelService.DeleteHotelAsync(id, cancellationToken);
         if (!result)
             return NotFound();
         return NoContent();

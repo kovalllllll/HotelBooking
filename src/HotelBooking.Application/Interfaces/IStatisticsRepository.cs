@@ -4,6 +4,6 @@ namespace HotelBooking.Application.Interfaces;
 
 public interface IStatisticsRepository
 {
-    Task<BookingStatisticsModel> GetBookingStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null);
+    Task<BookingStatisticsModel> GetBookingStatisticsAsync(DateTime? startDate = null, DateTime? endDate = null, CancellationToken cancellationToken = default);
 }
 

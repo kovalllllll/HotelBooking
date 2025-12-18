@@ -2,7 +2,7 @@
 
 namespace HotelBooking.Application.Models.Rooms;
 
-public class RoomSearchModel
+public class RoomFilter
 {
     public string? City { get; set; }
     public DateTime? CheckInDate { get; set; }
@@ -11,4 +11,5 @@ public class RoomSearchModel
     public decimal? MaxPrice { get; set; }
     public RoomType? RoomType { get; set; }
 }
+
 

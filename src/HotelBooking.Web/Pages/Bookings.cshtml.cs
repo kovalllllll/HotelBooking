@@ -11,18 +11,18 @@ public class BookingsModel(IBookingService bookingService, IUserContext userCont
 {
     public IEnumerable<BookingModel> Bookings { get; set; } = [];
 
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
         if (!string.IsNullOrEmpty(userId))
         {
-            Bookings = await bookingService.GetUserBookingsAsync(userId);
+            Bookings = await bookingService.GetUserBookingsAsync(userId, cancellationToken);
         }
     }
 
     [TempData] public string? ErrorMessage { get; set; }
 
-    public async Task<IActionResult> OnPostCancelAsync(int bookingId)
+    public async Task<IActionResult> OnPostCancelAsync(int bookingId, CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
@@ -32,7 +32,7 @@ public class BookingsModel(IBookingService bookingService, IUserContext userCont
 
         try
         {
-            await bookingService.CancelBookingAsync(bookingId, userId);
+            await bookingService.CancelBookingAsync(bookingId, userId, cancellationToken);
         }
         catch (KeyNotFoundException)
         {

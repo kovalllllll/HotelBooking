@@ -4,12 +4,12 @@ namespace HotelBooking.Application.Interfaces;
 
 public interface IRoomService
 {
-    Task<IEnumerable<RoomModel>> GetAllRoomsAsync();
-    Task<RoomModel?> GetRoomByIdAsync(int id);
-    Task<IEnumerable<RoomModel>> GetRoomsByHotelAsync(int hotelId);
-    Task<IEnumerable<RoomModel>> SearchRoomsAsync(RoomSearchModel searchModel);
-    Task<RoomModel> CreateRoomAsync(CreateRoomModel model);
-    Task<RoomModel?> UpdateRoomAsync(int id, UpdateRoomModel model);
-    Task<bool> DeleteRoomAsync(int id);
+    Task<IEnumerable<RoomModel>> GetAllRoomsAsync(CancellationToken cancellationToken = default);
+    Task<RoomModel?> GetRoomByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<RoomModel>> GetRoomsByHotelAsync(int hotelId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<RoomModel>> SearchRoomsAsync(RoomFilter filter, CancellationToken cancellationToken = default);
+    Task<RoomModel> CreateRoomAsync(CreateRoomModel model, CancellationToken cancellationToken = default);
+    Task<RoomModel?> UpdateRoomAsync(int id, UpdateRoomModel model, CancellationToken cancellationToken = default);
+    Task<bool> DeleteRoomAsync(int id, CancellationToken cancellationToken = default);
 }
 

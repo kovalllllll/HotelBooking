@@ -19,19 +19,19 @@ public class DetailsModel(
     public string? SuccessMessage { get; set; }
     public string? ErrorMessage { get; set; }
 
-    public async Task<IActionResult> OnGetAsync(int id)
+    public async Task<IActionResult> OnGetAsync(int id, CancellationToken cancellationToken)
     {
-        Hotel = await hotelService.GetHotelByIdAsync(id);
+        Hotel = await hotelService.GetHotelByIdAsync(id, cancellationToken);
         if (Hotel == null)
         {
             return Page();
         }
 
-        Rooms = await roomService.GetRoomsByHotelAsync(id);
+        Rooms = await roomService.GetRoomsByHotelAsync(id, cancellationToken);
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(int id, int roomId, DateTime checkIn, DateTime checkOut, int guests, string? specialRequests)
+    public async Task<IActionResult> OnPostAsync(int id, int roomId, DateTime checkIn, DateTime checkOut, int guests, string? specialRequests, CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
@@ -39,8 +39,8 @@ public class DetailsModel(
             return RedirectToPage("/Login");
         }
 
-        Hotel = await hotelService.GetHotelByIdAsync(id);
-        Rooms = await roomService.GetRoomsByHotelAsync(id);
+        Hotel = await hotelService.GetHotelByIdAsync(id, cancellationToken);
+        Rooms = await roomService.GetRoomsByHotelAsync(id, cancellationToken);
 
         if (checkOut <= checkIn)
         {
@@ -57,10 +57,10 @@ public class DetailsModel(
                 CheckOutDate = checkOut,
                 NumberOfGuests = guests,
                 SpecialRequests = specialRequests
-            });
+            }, cancellationToken);
 
             SuccessMessage = $"Бронювання успішно створено! Номер бронювання: #{booking.Id}. Загальна вартість: {booking.TotalPrice:N0} ₴";
-            Rooms = await roomService.GetRoomsByHotelAsync(id);
+            Rooms = await roomService.GetRoomsByHotelAsync(id, cancellationToken);
         }
         catch (InvalidOperationException ex)
         {

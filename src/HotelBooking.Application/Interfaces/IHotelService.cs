@@ -4,10 +4,10 @@ namespace HotelBooking.Application.Interfaces;
 
 public interface IHotelService
 {
-    Task<IEnumerable<HotelModel>> GetAllHotelsAsync();
-    Task<HotelModel?> GetHotelByIdAsync(int id);
-    Task<IEnumerable<HotelModel>> GetHotelsByCityAsync(string city);
-    Task<HotelModel> CreateHotelAsync(CreateHotelModel model);
-    Task<HotelModel?> UpdateHotelAsync(int id, UpdateHotelModel model);
-    Task<bool> DeleteHotelAsync(int id);
+    Task<IEnumerable<HotelModel>> GetAllHotelsAsync(CancellationToken cancellationToken = default);
+    Task<HotelModel?> GetHotelByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<HotelModel>> GetHotelsByCityAsync(string city, CancellationToken cancellationToken = default);
+    Task<HotelModel> CreateHotelAsync(CreateHotelModel model, CancellationToken cancellationToken = default);
+    Task<HotelModel?> UpdateHotelAsync(int id, UpdateHotelModel model, CancellationToken cancellationToken = default);
+    Task<bool> DeleteHotelAsync(int id, CancellationToken cancellationToken = default);
 }

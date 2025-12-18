@@ -13,9 +13,9 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     public IRoomRepository Rooms => _rooms ??= new RoomRepository(context);
     public IBookingRepository Bookings => _bookings ??= new BookingRepository(context);
 
-    public async Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await context.SaveChangesAsync();
+        return await context.SaveChangesAsync(cancellationToken);
     }
 
     public void Dispose()

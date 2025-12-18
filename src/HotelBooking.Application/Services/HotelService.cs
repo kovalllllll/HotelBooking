@@ -6,25 +6,25 @@ namespace HotelBooking.Application.Services;
 
 public class HotelService(IUnitOfWork unitOfWork) : IHotelService
 {
-    public async Task<IEnumerable<HotelModel>> GetAllHotelsAsync()
+    public async Task<IEnumerable<HotelModel>> GetAllHotelsAsync(CancellationToken cancellationToken = default)
     {
-        var hotels = await unitOfWork.Hotels.GetAllWithRoomsAsync();
+        var hotels = await unitOfWork.Hotels.GetAllWithRoomsAsync(cancellationToken);
         return hotels.Select(MapToModel);
     }
 
-    public async Task<HotelModel?> GetHotelByIdAsync(int id)
+    public async Task<HotelModel?> GetHotelByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var hotel = await unitOfWork.Hotels.GetHotelWithRoomsAsync(id);
+        var hotel = await unitOfWork.Hotels.GetHotelWithRoomsAsync(id, cancellationToken);
         return hotel == null ? null : MapToModel(hotel);
     }
 
-    public async Task<IEnumerable<HotelModel>> GetHotelsByCityAsync(string city)
+    public async Task<IEnumerable<HotelModel>> GetHotelsByCityAsync(string city, CancellationToken cancellationToken = default)
     {
-        var hotels = await unitOfWork.Hotels.GetHotelsByCityAsync(city);
+        var hotels = await unitOfWork.Hotels.GetHotelsByCityAsync(city, cancellationToken);
         return hotels.Select(MapToModel);
     }
 
-    public async Task<HotelModel> CreateHotelAsync(CreateHotelModel model)
+    public async Task<HotelModel> CreateHotelAsync(CreateHotelModel model, CancellationToken cancellationToken = default)
     {
         var hotel = new Hotel
         {
@@ -36,15 +36,15 @@ public class HotelService(IUnitOfWork unitOfWork) : IHotelService
             ImageUrl = model.ImageUrl
         };
 
-        await unitOfWork.Hotels.AddAsync(hotel);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.Hotels.AddAsync(hotel, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToModel(hotel);
     }
 
-    public async Task<HotelModel?> UpdateHotelAsync(int id, UpdateHotelModel model)
+    public async Task<HotelModel?> UpdateHotelAsync(int id, UpdateHotelModel model, CancellationToken cancellationToken = default)
     {
-        var hotel = await unitOfWork.Hotels.GetByIdAsync(id);
+        var hotel = await unitOfWork.Hotels.GetByIdAsync(id, cancellationToken);
         if (hotel == null) return null;
 
         hotel.Name = model.Name;
@@ -55,19 +55,19 @@ public class HotelService(IUnitOfWork unitOfWork) : IHotelService
         hotel.ImageUrl = model.ImageUrl;
         hotel.UpdatedAt = DateTime.UtcNow;
 
-        await unitOfWork.Hotels.UpdateAsync(hotel);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.Hotels.UpdateAsync(hotel, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return MapToModel(hotel);
     }
 
-    public async Task<bool> DeleteHotelAsync(int id)
+    public async Task<bool> DeleteHotelAsync(int id, CancellationToken cancellationToken = default)
     {
-        var hotel = await unitOfWork.Hotels.GetByIdAsync(id);
+        var hotel = await unitOfWork.Hotels.GetByIdAsync(id, cancellationToken);
         if (hotel == null) return false;
 
-        await unitOfWork.Hotels.DeleteAsync(hotel);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.Hotels.DeleteAsync(hotel, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
     }

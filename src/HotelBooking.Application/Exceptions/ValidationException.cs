@@ -1,8 +1,6 @@
 ﻿namespace HotelBooking.Application.Exceptions;
 
-/// <summary>
-/// Виключення при помилках валідації
-/// </summary>
+
 public class ValidationException : AppException
 {
     public override int StatusCode => 400;

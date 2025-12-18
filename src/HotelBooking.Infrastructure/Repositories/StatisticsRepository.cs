@@ -10,7 +10,7 @@ namespace HotelBooking.Infrastructure.Repositories;
 public class StatisticsRepository(ApplicationDbContext context) : IStatisticsRepository
 {
     public async Task<BookingStatisticsModel> GetBookingStatisticsAsync(DateTime? startDate = null,
-        DateTime? endDate = null)
+        DateTime? endDate = null, CancellationToken cancellationToken = default)
     {
         var connection = context.Database.GetDbConnection();
 

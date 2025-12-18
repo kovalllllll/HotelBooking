@@ -7,26 +7,26 @@ namespace HotelBooking.Infrastructure.Repositories;
 
 public class HotelRepository(ApplicationDbContext context) : Repository<Hotel>(context), IHotelRepository
 {
-    public async Task<IEnumerable<Hotel>> GetHotelsByCityAsync(string city)
+    public async Task<IEnumerable<Hotel>> GetHotelsByCityAsync(string city, CancellationToken cancellationToken = default)
     {
         return await DbSet
             .Include(h => h.Rooms)
             .Where(h => h.City.Contains(city, StringComparison.CurrentCultureIgnoreCase))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<Hotel?> GetHotelWithRoomsAsync(int id)
+    public async Task<Hotel?> GetHotelWithRoomsAsync(int id, CancellationToken cancellationToken = default)
     {
         return await DbSet
             .Include(h => h.Rooms)
-            .FirstOrDefaultAsync(h => h.Id == id);
+            .FirstOrDefaultAsync(h => h.Id == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<Hotel>> GetAllWithRoomsAsync()
+    public async Task<IEnumerable<Hotel>> GetAllWithRoomsAsync(CancellationToken cancellationToken = default)
     {
         return await DbSet
             .Include(h => h.Rooms)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }
 

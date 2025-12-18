@@ -7,33 +7,33 @@ namespace HotelBooking.Application.Services;
 
 public class BookingService(IUnitOfWork unitOfWork) : IBookingService
 {
-    public async Task<IEnumerable<BookingModel>> GetAllBookingsAsync()
+    public async Task<IEnumerable<BookingModel>> GetAllBookingsAsync(CancellationToken cancellationToken = default)
     {
-        var bookings = await unitOfWork.Bookings.GetAllBookingsWithDetailsAsync();
+        var bookings = await unitOfWork.Bookings.GetAllBookingsWithDetailsAsync(cancellationToken);
         return bookings.Select(MapToModel);
     }
 
-    public async Task<BookingModel?> GetBookingByIdAsync(int id)
+    public async Task<BookingModel?> GetBookingByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var booking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(id);
+        var booking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(id, cancellationToken);
         return booking == null ? null : MapToModel(booking);
     }
 
-    public async Task<IEnumerable<BookingModel>> GetUserBookingsAsync(string userId)
+    public async Task<IEnumerable<BookingModel>> GetUserBookingsAsync(string userId, CancellationToken cancellationToken = default)
     {
-        var bookings = await unitOfWork.Bookings.GetBookingsByUserAsync(userId);
+        var bookings = await unitOfWork.Bookings.GetBookingsByUserAsync(userId, cancellationToken);
         return bookings.Select(MapToModel);
     }
 
-    public async Task<BookingModel> CreateBookingAsync(string userId, CreateBookingModel model)
+    public async Task<BookingModel> CreateBookingAsync(string userId, CreateBookingModel model, CancellationToken cancellationToken = default)
     {
-        var isAvailable = await unitOfWork.Rooms.IsRoomAvailableAsync(model.RoomId, model.CheckInDate, model.CheckOutDate);
+        var isAvailable = await unitOfWork.Rooms.IsRoomAvailableAsync(model.RoomId, model.CheckInDate, model.CheckOutDate, cancellationToken: cancellationToken);
         if (!isAvailable)
         {
             throw new InvalidOperationException("Room is not available for the selected dates.");
         }
 
-        var room = await unitOfWork.Rooms.GetByIdAsync(model.RoomId);
+        var room = await unitOfWork.Rooms.GetByIdAsync(model.RoomId, cancellationToken);
         if (room == null)
         {
             throw new InvalidOperationException("Room not found.");
@@ -59,31 +59,31 @@ public class BookingService(IUnitOfWork unitOfWork) : IBookingService
             UserId = userId
         };
 
-        await unitOfWork.Bookings.AddAsync(booking);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.Bookings.AddAsync(booking, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var createdBooking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(booking.Id);
+        var createdBooking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(booking.Id, cancellationToken);
         return MapToModel(createdBooking!);
     }
 
-    public async Task<BookingModel?> UpdateBookingStatusAsync(int id, UpdateBookingStatusModel model)
+    public async Task<BookingModel?> UpdateBookingStatusAsync(int id, UpdateBookingStatusModel model, CancellationToken cancellationToken = default)
     {
-        var booking = await unitOfWork.Bookings.GetByIdAsync(id);
+        var booking = await unitOfWork.Bookings.GetByIdAsync(id, cancellationToken);
         if (booking == null) return null;
 
         booking.Status = model.Status;
         booking.UpdatedAt = DateTime.UtcNow;
 
-        await unitOfWork.Bookings.UpdateAsync(booking);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.Bookings.UpdateAsync(booking, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var updatedBooking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(booking.Id);
+        var updatedBooking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(booking.Id, cancellationToken);
         return MapToModel(updatedBooking!);
     }
 
-    public async Task<bool> CancelBookingAsync(int id, string userId)
+    public async Task<bool> CancelBookingAsync(int id, string userId, CancellationToken cancellationToken = default)
     {
-        var booking = await unitOfWork.Bookings.GetByIdAsync(id);
+        var booking = await unitOfWork.Bookings.GetByIdAsync(id, cancellationToken);
         if (booking == null)
         {
             throw new KeyNotFoundException("Бронювання не знайдено.");
@@ -102,8 +102,8 @@ public class BookingService(IUnitOfWork unitOfWork) : IBookingService
         booking.Status = BookingStatus.Cancelled;
         booking.UpdatedAt = DateTime.UtcNow;
 
-        await unitOfWork.Bookings.UpdateAsync(booking);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.Bookings.UpdateAsync(booking, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;
     }

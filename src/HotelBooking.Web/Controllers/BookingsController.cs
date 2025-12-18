@@ -12,16 +12,16 @@ public class BookingsController(IBookingService bookingService, IUserContext use
 {
     [HttpGet]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<IEnumerable<BookingModel>>> GetAll()
+    public async Task<ActionResult<IEnumerable<BookingModel>>> GetAll(CancellationToken cancellationToken)
     {
-        var bookings = await bookingService.GetAllBookingsAsync();
+        var bookings = await bookingService.GetAllBookingsAsync(cancellationToken);
         return Ok(bookings);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<BookingModel>> GetById(int id)
+    public async Task<ActionResult<BookingModel>> GetById(int id, CancellationToken cancellationToken)
     {
-        var booking = await bookingService.GetBookingByIdAsync(id);
+        var booking = await bookingService.GetBookingByIdAsync(id, cancellationToken);
         if (booking == null)
             return NotFound();
 
@@ -33,18 +33,18 @@ public class BookingsController(IBookingService bookingService, IUserContext use
     }
 
     [HttpGet("my")]
-    public async Task<ActionResult<IEnumerable<BookingModel>>> GetMyBookings()
+    public async Task<ActionResult<IEnumerable<BookingModel>>> GetMyBookings(CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        var bookings = await bookingService.GetUserBookingsAsync(userId);
+        var bookings = await bookingService.GetUserBookingsAsync(userId, cancellationToken);
         return Ok(bookings);
     }
 
     [HttpPost]
-    public async Task<ActionResult<BookingModel>> Create([FromBody] CreateBookingModel model)
+    public async Task<ActionResult<BookingModel>> Create([FromBody] CreateBookingModel model, CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
@@ -52,7 +52,7 @@ public class BookingsController(IBookingService bookingService, IUserContext use
 
         try
         {
-            var booking = await bookingService.CreateBookingAsync(userId, model);
+            var booking = await bookingService.CreateBookingAsync(userId, model, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
         }
         catch (InvalidOperationException ex)
@@ -63,16 +63,16 @@ public class BookingsController(IBookingService bookingService, IUserContext use
 
     [HttpPut("{id:int}/status")]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<BookingModel>> UpdateStatus(int id, [FromBody] UpdateBookingStatusModel model)
+    public async Task<ActionResult<BookingModel>> UpdateStatus(int id, [FromBody] UpdateBookingStatusModel model, CancellationToken cancellationToken)
     {
-        var booking = await bookingService.UpdateBookingStatusAsync(id, model);
+        var booking = await bookingService.UpdateBookingStatusAsync(id, model, cancellationToken);
         if (booking == null)
             return NotFound();
         return Ok(booking);
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Cancel(int id)
+    public async Task<IActionResult> Cancel(int id, CancellationToken cancellationToken)
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
@@ -82,13 +82,13 @@ public class BookingsController(IBookingService bookingService, IUserContext use
         {
             if (userContext.IsInRole("Administrator"))
             {
-                var booking = await bookingService.GetBookingByIdAsync(id);
+                var booking = await bookingService.GetBookingByIdAsync(id, cancellationToken);
                 if (booking == null)
                     return NotFound();
                 userId = booking.UserId;
             }
 
-            var result = await bookingService.CancelBookingAsync(id, userId);
+            var result = await bookingService.CancelBookingAsync(id, userId, cancellationToken);
             if (!result)
                 return NotFound();
             return Ok(new { message = "Booking cancelled successfully" });

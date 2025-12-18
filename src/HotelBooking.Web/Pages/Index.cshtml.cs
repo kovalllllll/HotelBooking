@@ -18,15 +18,15 @@ public class IndexModel(IHotelService hotelService) : PageModel
     [BindProperty(SupportsGet = true)]
     public DateTime? CheckOut { get; set; }
 
-    public async Task OnGetAsync()
+    public async Task OnGetAsync(CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(City))
         {
-            Hotels = await hotelService.GetHotelsByCityAsync(City);
+            Hotels = await hotelService.GetHotelsByCityAsync(City, cancellationToken);
         }
         else
         {
-            Hotels = await hotelService.GetAllHotelsAsync();
+            Hotels = await hotelService.GetAllHotelsAsync(cancellationToken);
         }
     }
 }
