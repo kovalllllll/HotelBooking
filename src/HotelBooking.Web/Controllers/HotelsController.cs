@@ -31,7 +31,7 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
         var hotel = await hotelService.GetHotelByIdAsync(id);
         if (hotel == null)
             return NotFound();
-        
+
         var rooms = await roomService.GetRoomsByHotelAsync(id);
         return Ok(rooms);
     }
@@ -41,7 +41,7 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
     {
         if (string.IsNullOrWhiteSpace(city))
             return BadRequest("City is required");
-        
+
         var hotels = await hotelService.GetHotelsByCityAsync(city);
         return Ok(hotels);
     }
@@ -74,4 +74,3 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
         return NoContent();
     }
 }
-

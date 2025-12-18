@@ -1,11 +1,15 @@
 using HotelBooking.Infrastructure;
 using HotelBooking.Infrastructure.Persistence;
+using HotelBooking.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
 
@@ -24,6 +28,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

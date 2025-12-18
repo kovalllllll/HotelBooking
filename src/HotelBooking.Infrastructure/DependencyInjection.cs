@@ -1,9 +1,9 @@
-﻿﻿using HotelBooking.Application.Interfaces;
+﻿using HotelBooking.Application.Interfaces;
 using HotelBooking.Application.Services;
+using HotelBooking.Infrastructure.Context;
 using HotelBooking.Infrastructure.Identity;
 using HotelBooking.Infrastructure.Persistence;
 using HotelBooking.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,16 +20,16 @@ public static class DependencyInjection
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
         services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-        {
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 6;
-            options.User.RequireUniqueEmail = true;
-        })
-        .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddDefaultTokenProviders();
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IHotelRepository, HotelRepository>();
@@ -40,10 +40,9 @@ public static class DependencyInjection
         services.AddScoped<IHotelService, HotelService>();
         services.AddScoped<IRoomService, RoomService>();
         services.AddScoped<IBookingService, BookingService>();
-        
+
         services.AddScoped<IUserContext, UserContext>();
 
         return services;
     }
 }
-

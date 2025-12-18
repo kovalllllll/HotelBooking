@@ -45,6 +45,7 @@ public class AuthController(
         {
             await roleManager.CreateAsync(new IdentityRole("Client"));
         }
+
         await userManager.AddToRoleAsync(user, "Client");
 
         await signInManager.SignInAsync(user, isPersistent: false);
@@ -75,7 +76,8 @@ public class AuthController(
             return BadRequest(new AuthResultDto { Succeeded = false, Error = "Invalid email or password" });
         }
 
-        var result = await signInManager.PasswordSignInAsync(user, dto.Password, dto.RememberMe, lockoutOnFailure: false);
+        var result =
+            await signInManager.PasswordSignInAsync(user, dto.Password, dto.RememberMe, lockoutOnFailure: false);
 
         if (!result.Succeeded)
         {

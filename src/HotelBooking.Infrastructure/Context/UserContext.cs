@@ -2,7 +2,7 @@
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace HotelBooking.Infrastructure;
+namespace HotelBooking.Infrastructure.Context;
 
 public class UserContext(IHttpContextAccessor httpContextAccessor) : IUserContext
 {

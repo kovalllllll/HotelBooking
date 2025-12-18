@@ -25,10 +25,7 @@ public class RoomsController(IRoomService roomService) : ControllerBase
         return Ok(room);
     }
 
-    /// <summary>
-    /// Gets rooms by hotel ID.
-    /// Consider using GET /api/hotels/{hotelId}/rooms instead.
-    /// </summary>
+
     [HttpGet("hotel/{hotelId:int}")]
     public async Task<ActionResult<IEnumerable<RoomDto>>> GetByHotel(int hotelId)
     {
@@ -71,4 +68,3 @@ public class RoomsController(IRoomService roomService) : ControllerBase
         return NoContent();
     }
 }
-
