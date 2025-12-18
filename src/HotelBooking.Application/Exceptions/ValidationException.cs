@@ -26,7 +26,7 @@ public class ValidationException : AppException
     {
         Errors = new Dictionary<string, string[]>
         {
-            { propertyName, new[] { errorMessage } }
+            { propertyName, [errorMessage] }
         };
     }
 }

@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using HotelBooking.Domain.Entities;
 using HotelBooking.Domain.Enums;
@@ -7,39 +7,39 @@ namespace HotelBooking.Application.Services;
 
 public class BookingService(IUnitOfWork unitOfWork) : IBookingService
 {
-    public async Task<IEnumerable<BookingDto>> GetAllBookingsAsync()
+    public async Task<IEnumerable<BookingModel>> GetAllBookingsAsync()
     {
         var bookings = await unitOfWork.Bookings.GetAllBookingsWithDetailsAsync();
-        return bookings.Select(MapToDto);
+        return bookings.Select(MapToModel);
     }
 
-    public async Task<BookingDto?> GetBookingByIdAsync(int id)
+    public async Task<BookingModel?> GetBookingByIdAsync(int id)
     {
         var booking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(id);
-        return booking == null ? null : MapToDto(booking);
+        return booking == null ? null : MapToModel(booking);
     }
 
-    public async Task<IEnumerable<BookingDto>> GetUserBookingsAsync(string userId)
+    public async Task<IEnumerable<BookingModel>> GetUserBookingsAsync(string userId)
     {
         var bookings = await unitOfWork.Bookings.GetBookingsByUserAsync(userId);
-        return bookings.Select(MapToDto);
+        return bookings.Select(MapToModel);
     }
 
-    public async Task<BookingDto> CreateBookingAsync(string userId, CreateBookingDto dto)
+    public async Task<BookingModel> CreateBookingAsync(string userId, CreateBookingModel model)
     {
-        var isAvailable = await unitOfWork.Rooms.IsRoomAvailableAsync(dto.RoomId, dto.CheckInDate, dto.CheckOutDate);
+        var isAvailable = await unitOfWork.Rooms.IsRoomAvailableAsync(model.RoomId, model.CheckInDate, model.CheckOutDate);
         if (!isAvailable)
         {
             throw new InvalidOperationException("Room is not available for the selected dates.");
         }
 
-        var room = await unitOfWork.Rooms.GetByIdAsync(dto.RoomId);
+        var room = await unitOfWork.Rooms.GetByIdAsync(model.RoomId);
         if (room == null)
         {
             throw new InvalidOperationException("Room not found.");
         }
 
-        var nights = (dto.CheckOutDate - dto.CheckInDate).Days;
+        var nights = (model.CheckOutDate - model.CheckInDate).Days;
         if (nights <= 0)
         {
             throw new InvalidOperationException("Check-out date must be after check-in date.");
@@ -49,13 +49,13 @@ public class BookingService(IUnitOfWork unitOfWork) : IBookingService
 
         var booking = new Booking
         {
-            CheckInDate = dto.CheckInDate,
-            CheckOutDate = dto.CheckOutDate,
+            CheckInDate = model.CheckInDate,
+            CheckOutDate = model.CheckOutDate,
             TotalPrice = totalPrice,
             Status = BookingStatus.Pending,
-            SpecialRequests = dto.SpecialRequests,
-            NumberOfGuests = dto.NumberOfGuests,
-            RoomId = dto.RoomId,
+            SpecialRequests = model.SpecialRequests,
+            NumberOfGuests = model.NumberOfGuests,
+            RoomId = model.RoomId,
             UserId = userId
         };
 
@@ -63,22 +63,22 @@ public class BookingService(IUnitOfWork unitOfWork) : IBookingService
         await unitOfWork.SaveChangesAsync();
 
         var createdBooking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(booking.Id);
-        return MapToDto(createdBooking!);
+        return MapToModel(createdBooking!);
     }
 
-    public async Task<BookingDto?> UpdateBookingStatusAsync(int id, UpdateBookingStatusDto dto)
+    public async Task<BookingModel?> UpdateBookingStatusAsync(int id, UpdateBookingStatusModel model)
     {
         var booking = await unitOfWork.Bookings.GetByIdAsync(id);
         if (booking == null) return null;
 
-        booking.Status = dto.Status;
+        booking.Status = model.Status;
         booking.UpdatedAt = DateTime.UtcNow;
 
         await unitOfWork.Bookings.UpdateAsync(booking);
         await unitOfWork.SaveChangesAsync();
 
         var updatedBooking = await unitOfWork.Bookings.GetBookingWithDetailsAsync(booking.Id);
-        return MapToDto(updatedBooking!);
+        return MapToModel(updatedBooking!);
     }
 
     public async Task<bool> CancelBookingAsync(int id, string userId)
@@ -108,9 +108,9 @@ public class BookingService(IUnitOfWork unitOfWork) : IBookingService
         return true;
     }
 
-    private static BookingDto MapToDto(Booking booking)
+    private static BookingModel MapToModel(Booking booking)
     {
-        return new BookingDto
+        return new BookingModel
         {
             Id = booking.Id,
             CheckInDate = booking.CheckInDate,

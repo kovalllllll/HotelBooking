@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +10,14 @@ namespace HotelBooking.Web.Controllers;
 public class HotelsController(IHotelService hotelService, IRoomService roomService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<HotelDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<HotelModel>>> GetAll()
     {
         var hotels = await hotelService.GetAllHotelsAsync();
         return Ok(hotels);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<HotelDto>> GetById(int id)
+    public async Task<ActionResult<HotelModel>> GetById(int id)
     {
         var hotel = await hotelService.GetHotelByIdAsync(id);
         if (hotel == null)
@@ -26,7 +26,7 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
     }
 
     [HttpGet("{id:int}/rooms")]
-    public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms(int id)
+    public async Task<ActionResult<IEnumerable<RoomModel>>> GetRooms(int id)
     {
         var hotel = await hotelService.GetHotelByIdAsync(id);
         if (hotel == null)
@@ -37,7 +37,7 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
     }
 
     [HttpGet("search")]
-    public async Task<ActionResult<IEnumerable<HotelDto>>> SearchByCity([FromQuery] string city)
+    public async Task<ActionResult<IEnumerable<HotelModel>>> SearchByCity([FromQuery] string city)
     {
         if (string.IsNullOrWhiteSpace(city))
             return BadRequest("City is required");
@@ -48,17 +48,17 @@ public class HotelsController(IHotelService hotelService, IRoomService roomServi
 
     [HttpPost]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<HotelDto>> Create([FromBody] CreateHotelDto dto)
+    public async Task<ActionResult<HotelModel>> Create([FromBody] CreateHotelModel model)
     {
-        var hotel = await hotelService.CreateHotelAsync(dto);
+        var hotel = await hotelService.CreateHotelAsync(model);
         return CreatedAtAction(nameof(GetById), new { id = hotel.Id }, hotel);
     }
 
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<HotelDto>> Update(int id, [FromBody] UpdateHotelDto dto)
+    public async Task<ActionResult<HotelModel>> Update(int id, [FromBody] UpdateHotelModel model)
     {
-        var hotel = await hotelService.UpdateHotelAsync(id, dto);
+        var hotel = await hotelService.UpdateHotelAsync(id, model);
         if (hotel == null)
             return NotFound();
         return Ok(hotel);

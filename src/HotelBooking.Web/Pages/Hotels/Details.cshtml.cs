@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,8 +12,8 @@ public class DetailsModel(
     IUserContext userContext)
     : PageModel
 {
-    public HotelDto? Hotel { get; set; }
-    public IEnumerable<RoomDto> Rooms { get; set; } = [];
+    public HotelModel? Hotel { get; set; }
+    public IEnumerable<RoomModel> Rooms { get; set; } = [];
     public string? SuccessMessage { get; set; }
     public string? ErrorMessage { get; set; }
 
@@ -48,7 +48,7 @@ public class DetailsModel(
 
         try
         {
-            var booking = await bookingService.CreateBookingAsync(userId, new CreateBookingDto
+            var booking = await bookingService.CreateBookingAsync(userId, new CreateBookingModel
             {
                 RoomId = roomId,
                 CheckInDate = checkIn,

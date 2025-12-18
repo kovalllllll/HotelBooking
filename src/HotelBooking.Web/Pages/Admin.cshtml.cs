@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using HotelBooking.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
@@ -11,8 +11,8 @@ namespace HotelBooking.Web.Pages;
 public class AdminModel(IBookingService bookingService, IStatisticsRepository statisticsRepository)
     : PageModel
 {
-    public BookingStatisticsDto Statistics { get; set; } = new();
-    public IEnumerable<BookingDto> Bookings { get; set; } = Enumerable.Empty<BookingDto>();
+    public BookingStatisticsModel Statistics { get; set; } = new();
+    public IEnumerable<BookingModel> Bookings { get; set; } = Enumerable.Empty<BookingModel>();
 
     public async Task OnGetAsync()
     {
@@ -22,7 +22,7 @@ public class AdminModel(IBookingService bookingService, IStatisticsRepository st
 
     public async Task<IActionResult> OnPostConfirmAsync(int bookingId)
     {
-        await bookingService.UpdateBookingStatusAsync(bookingId, new UpdateBookingStatusDto 
+        await bookingService.UpdateBookingStatusAsync(bookingId, new UpdateBookingStatusModel 
         { 
             Status = BookingStatus.Confirmed 
         });
@@ -31,7 +31,7 @@ public class AdminModel(IBookingService bookingService, IStatisticsRepository st
 
     public async Task<IActionResult> OnPostCancelAsync(int bookingId)
     {
-        await bookingService.UpdateBookingStatusAsync(bookingId, new UpdateBookingStatusDto 
+        await bookingService.UpdateBookingStatusAsync(bookingId, new UpdateBookingStatusModel 
         { 
             Status = BookingStatus.Cancelled 
         });

@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using HotelBooking.Domain.Entities;
 using HotelBooking.Domain.Enums;
@@ -17,39 +17,39 @@ public class RoomRepository(ApplicationDbContext context) : Repository<Room>(con
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Room>> SearchRoomsAsync(RoomSearchDto searchDto)
+    public async Task<IEnumerable<Room>> SearchRoomsAsync(RoomSearchModel searchModel)
     {
         var query = DbSet
             .Include(r => r.Hotel)
             .Include(r => r.Bookings)
             .AsQueryable();
 
-        if (!string.IsNullOrEmpty(searchDto.City))
+        if (!string.IsNullOrEmpty(searchModel.City))
         {
-            query = query.Where(r => r.Hotel.City.Contains(searchDto.City, StringComparison.CurrentCultureIgnoreCase));
+            query = query.Where(r => r.Hotel.City.Contains(searchModel.City, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        if (searchDto.Capacity.HasValue)
+        if (searchModel.Capacity.HasValue)
         {
-            query = query.Where(r => r.Capacity >= searchDto.Capacity.Value);
+            query = query.Where(r => r.Capacity >= searchModel.Capacity.Value);
         }
 
-        if (searchDto.MaxPrice.HasValue)
+        if (searchModel.MaxPrice.HasValue)
         {
-            query = query.Where(r => r.PricePerNight <= searchDto.MaxPrice.Value);
+            query = query.Where(r => r.PricePerNight <= searchModel.MaxPrice.Value);
         }
 
-        if (searchDto.RoomType.HasValue)
+        if (searchModel.RoomType.HasValue)
         {
-            query = query.Where(r => r.RoomType == searchDto.RoomType.Value);
+            query = query.Where(r => r.RoomType == searchModel.RoomType.Value);
         }
 
-        if (searchDto.CheckInDate.HasValue && searchDto.CheckOutDate.HasValue)
+        if (searchModel.CheckInDate.HasValue && searchModel.CheckOutDate.HasValue)
         {
             query = query.Where(r => !r.Bookings.Any(b =>
                 b.Status != BookingStatus.Cancelled &&
-                b.CheckInDate < searchDto.CheckOutDate.Value &&
-                b.CheckOutDate > searchDto.CheckInDate.Value));
+                b.CheckInDate < searchModel.CheckOutDate.Value &&
+                b.CheckOutDate > searchModel.CheckInDate.Value));
         }
 
         return await query.Where(r => r.IsAvailable).ToListAsync();

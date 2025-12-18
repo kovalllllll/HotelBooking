@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +7,7 @@ namespace HotelBooking.Web.Pages;
 
 public class IndexModel(IHotelService hotelService) : PageModel
 {
-    public IEnumerable<HotelDto> Hotels { get; set; } = [];
+    public IEnumerable<HotelModel> Hotels { get; set; } = [];
     
     [BindProperty(SupportsGet = true)]
     public string? City { get; set; }

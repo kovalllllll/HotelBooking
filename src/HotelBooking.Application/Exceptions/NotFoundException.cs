@@ -1,8 +1,5 @@
 ﻿namespace HotelBooking.Application.Exceptions;
 
-/// <summary>
-/// Виключення, коли ресурс не знайдено
-/// </summary>
 public class NotFoundException : AppException
 {
     public override int StatusCode => 404;
@@ -12,9 +9,8 @@ public class NotFoundException : AppException
     {
     }
 
-    public NotFoundException(string entityName, object key) 
+    public NotFoundException(string entityName, object key)
         : base($"{entityName} з ідентифікатором '{key}' не знайдено.")
     {
     }
 }
-

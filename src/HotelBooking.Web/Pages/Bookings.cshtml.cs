@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ namespace HotelBooking.Web.Pages;
 [Authorize]
 public class BookingsModel(IBookingService bookingService, IUserContext userContext) : PageModel
 {
-    public IEnumerable<BookingDto> Bookings { get; set; } = [];
+    public IEnumerable<BookingModel> Bookings { get; set; } = [];
 
     public async Task OnGetAsync()
     {

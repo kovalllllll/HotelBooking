@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Dapper;
-using HotelBooking.Application.DTOs;
+using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using HotelBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace HotelBooking.Infrastructure.Repositories;
 
 public class StatisticsRepository(ApplicationDbContext context) : IStatisticsRepository
 {
-    public async Task<BookingStatisticsDto> GetBookingStatisticsAsync(DateTime? startDate = null,
+    public async Task<BookingStatisticsModel> GetBookingStatisticsAsync(DateTime? startDate = null,
         DateTime? endDate = null)
     {
         var connection = context.Database.GetDbConnection();
@@ -83,7 +83,7 @@ public class StatisticsRepository(ApplicationDbContext context) : IStatisticsRep
                 OccupancyRate = 0
             }).ToList();
 
-        return new BookingStatisticsDto
+        return new BookingStatisticsModel
         {
             TotalBookings = Convert.ToInt32(overallStats?.TotalBookings ?? 0),
             ConfirmedBookings = Convert.ToInt32(overallStats?.ConfirmedBookings ?? 0),

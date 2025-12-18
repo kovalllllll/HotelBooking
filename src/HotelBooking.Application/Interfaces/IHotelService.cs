@@ -1,13 +1,13 @@
-﻿using HotelBooking.Application.DTOs;
+﻿using HotelBooking.Application.Models;
 
 namespace HotelBooking.Application.Interfaces;
 
 public interface IHotelService
 {
-    Task<IEnumerable<HotelDto>> GetAllHotelsAsync();
-    Task<HotelDto?> GetHotelByIdAsync(int id);
-    Task<IEnumerable<HotelDto>> GetHotelsByCityAsync(string city);
-    Task<HotelDto> CreateHotelAsync(CreateHotelDto dto);
-    Task<HotelDto?> UpdateHotelAsync(int id, UpdateHotelDto dto);
+    Task<IEnumerable<HotelModel>> GetAllHotelsAsync();
+    Task<HotelModel?> GetHotelByIdAsync(int id);
+    Task<IEnumerable<HotelModel>> GetHotelsByCityAsync(string city);
+    Task<HotelModel> CreateHotelAsync(CreateHotelModel model);
+    Task<HotelModel?> UpdateHotelAsync(int id, UpdateHotelModel model);
     Task<bool> DeleteHotelAsync(int id);
 }

@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using HotelBooking.Domain.Entities;
 
@@ -6,49 +6,49 @@ namespace HotelBooking.Application.Services;
 
 public class RoomService(IUnitOfWork unitOfWork) : IRoomService
 {
-    public async Task<IEnumerable<RoomDto>> GetAllRoomsAsync()
+    public async Task<IEnumerable<RoomModel>> GetAllRoomsAsync()
     {
         var rooms = await unitOfWork.Rooms.GetAllAsync();
-        var result = new List<RoomDto>();
+        var result = new List<RoomModel>();
         foreach (var room in rooms)
         {
             var roomWithHotel = await unitOfWork.Rooms.GetRoomWithHotelAsync(room.Id);
             if (roomWithHotel != null)
-                result.Add(MapToDto(roomWithHotel));
+                result.Add(MapToModel(roomWithHotel));
         }
 
         return result;
     }
 
-    public async Task<RoomDto?> GetRoomByIdAsync(int id)
+    public async Task<RoomModel?> GetRoomByIdAsync(int id)
     {
         var room = await unitOfWork.Rooms.GetRoomWithHotelAsync(id);
-        return room == null ? null : MapToDto(room);
+        return room == null ? null : MapToModel(room);
     }
 
-    public async Task<IEnumerable<RoomDto>> GetRoomsByHotelAsync(int hotelId)
+    public async Task<IEnumerable<RoomModel>> GetRoomsByHotelAsync(int hotelId)
     {
         var rooms = await unitOfWork.Rooms.GetRoomsByHotelAsync(hotelId);
-        return rooms.Select(MapToDto);
+        return rooms.Select(MapToModel);
     }
 
-    public async Task<IEnumerable<RoomDto>> SearchRoomsAsync(RoomSearchDto searchDto)
+    public async Task<IEnumerable<RoomModel>> SearchRoomsAsync(RoomSearchModel searchModel)
     {
-        var rooms = await unitOfWork.Rooms.SearchRoomsAsync(searchDto);
-        return rooms.Select(MapToDto);
+        var rooms = await unitOfWork.Rooms.SearchRoomsAsync(searchModel);
+        return rooms.Select(MapToModel);
     }
 
-    public async Task<RoomDto> CreateRoomAsync(CreateRoomDto dto)
+    public async Task<RoomModel> CreateRoomAsync(CreateRoomModel model)
     {
         var room = new Room
         {
-            RoomNumber = dto.RoomNumber,
-            RoomType = dto.RoomType,
-            PricePerNight = dto.PricePerNight,
-            Capacity = dto.Capacity,
-            Description = dto.Description,
-            ImageUrl = dto.ImageUrl,
-            HotelId = dto.HotelId,
+            RoomNumber = model.RoomNumber,
+            RoomType = model.RoomType,
+            PricePerNight = model.PricePerNight,
+            Capacity = model.Capacity,
+            Description = model.Description,
+            ImageUrl = model.ImageUrl,
+            HotelId = model.HotelId,
             IsAvailable = true
         };
 
@@ -56,28 +56,28 @@ public class RoomService(IUnitOfWork unitOfWork) : IRoomService
         await unitOfWork.SaveChangesAsync();
 
         var createdRoom = await unitOfWork.Rooms.GetRoomWithHotelAsync(room.Id);
-        return MapToDto(createdRoom!);
+        return MapToModel(createdRoom!);
     }
 
-    public async Task<RoomDto?> UpdateRoomAsync(int id, UpdateRoomDto dto)
+    public async Task<RoomModel?> UpdateRoomAsync(int id, UpdateRoomModel model)
     {
         var room = await unitOfWork.Rooms.GetByIdAsync(id);
         if (room == null) return null;
 
-        room.RoomNumber = dto.RoomNumber;
-        room.RoomType = dto.RoomType;
-        room.PricePerNight = dto.PricePerNight;
-        room.Capacity = dto.Capacity;
-        room.Description = dto.Description;
-        room.IsAvailable = dto.IsAvailable;
-        room.ImageUrl = dto.ImageUrl;
+        room.RoomNumber = model.RoomNumber;
+        room.RoomType = model.RoomType;
+        room.PricePerNight = model.PricePerNight;
+        room.Capacity = model.Capacity;
+        room.Description = model.Description;
+        room.IsAvailable = model.IsAvailable;
+        room.ImageUrl = model.ImageUrl;
         room.UpdatedAt = DateTime.UtcNow;
 
         await unitOfWork.Rooms.UpdateAsync(room);
         await unitOfWork.SaveChangesAsync();
 
         var updatedRoom = await unitOfWork.Rooms.GetRoomWithHotelAsync(room.Id);
-        return MapToDto(updatedRoom!);
+        return MapToModel(updatedRoom!);
     }
 
     public async Task<bool> DeleteRoomAsync(int id)
@@ -91,9 +91,9 @@ public class RoomService(IUnitOfWork unitOfWork) : IRoomService
         return true;
     }
 
-    private static RoomDto MapToDto(Room room)
+    private static RoomModel MapToModel(Room room)
     {
-        return new RoomDto
+        return new RoomModel
         {
             Id = room.Id,
             RoomNumber = room.RoomNumber,

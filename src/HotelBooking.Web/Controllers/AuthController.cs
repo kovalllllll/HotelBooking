@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,27 +14,27 @@ public class AuthController(
     : ControllerBase
 {
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResultDto>> Register([FromBody] RegisterDto dto)
+    public async Task<ActionResult<AuthResultModel>> Register([FromBody] RegisterModel model)
     {
-        if (dto.Password != dto.ConfirmPassword)
+        if (model.Password != model.ConfirmPassword)
         {
-            return BadRequest(new AuthResultDto { Succeeded = false, Error = "Passwords do not match" });
+            return BadRequest(new AuthResultModel { Succeeded = false, Error = "Passwords do not match" });
         }
 
         var user = new ApplicationUser
         {
-            UserName = dto.Email,
-            Email = dto.Email,
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
-            PhoneNumber = dto.PhoneNumber
+            UserName = model.Email,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            PhoneNumber = model.PhoneNumber
         };
 
-        var result = await userManager.CreateAsync(user, dto.Password);
+        var result = await userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded)
         {
-            return BadRequest(new AuthResultDto
+            return BadRequest(new AuthResultModel
             {
                 Succeeded = false,
                 Error = string.Join(", ", result.Errors.Select(e => e.Description))
@@ -52,10 +52,10 @@ public class AuthController(
 
         var roles = await userManager.GetRolesAsync(user);
 
-        return Ok(new AuthResultDto
+        return Ok(new AuthResultModel
         {
             Succeeded = true,
-            User = new UserDto
+            User = new UserModel
             {
                 Id = user.Id,
                 Email = user.Email!,
@@ -68,28 +68,28 @@ public class AuthController(
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResultDto>> Login([FromBody] LoginDto dto)
+    public async Task<ActionResult<AuthResultModel>> Login([FromBody] LoginModel model)
     {
-        var user = await userManager.FindByEmailAsync(dto.Email);
+        var user = await userManager.FindByEmailAsync(model.Email);
         if (user == null)
         {
-            return BadRequest(new AuthResultDto { Succeeded = false, Error = "Invalid email or password" });
+            return BadRequest(new AuthResultModel { Succeeded = false, Error = "Invalid email or password" });
         }
 
         var result =
-            await signInManager.PasswordSignInAsync(user, dto.Password, dto.RememberMe, lockoutOnFailure: false);
+            await signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
 
         if (!result.Succeeded)
         {
-            return BadRequest(new AuthResultDto { Succeeded = false, Error = "Invalid email or password" });
+            return BadRequest(new AuthResultModel { Succeeded = false, Error = "Invalid email or password" });
         }
 
         var roles = await userManager.GetRolesAsync(user);
 
-        return Ok(new AuthResultDto
+        return Ok(new AuthResultModel
         {
             Succeeded = true,
-            User = new UserDto
+            User = new UserModel
             {
                 Id = user.Id,
                 Email = user.Email!,
@@ -109,7 +109,7 @@ public class AuthController(
     }
 
     [HttpGet("current")]
-    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    public async Task<ActionResult<UserModel>> GetCurrentUser()
     {
         if (User.Identity?.IsAuthenticated != true)
         {
@@ -125,7 +125,7 @@ public class AuthController(
 
         var roles = await userManager.GetRolesAsync(user);
 
-        return Ok(new UserDto
+        return Ok(new UserModel
         {
             Id = user.Id,
             Email = user.Email!,

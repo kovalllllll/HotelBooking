@@ -10,4 +10,3 @@ public interface IBookingRepository : IRepository<Booking>
     Task<IEnumerable<Booking>> GetBookingsByRoomAsync(int roomId);
     Task<IEnumerable<Booking>> GetBookingsInDateRangeAsync(DateTime startDate, DateTime endDate);
 }
-

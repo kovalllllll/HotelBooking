@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +12,14 @@ public class BookingsController(IBookingService bookingService, IUserContext use
 {
     [HttpGet]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<IEnumerable<BookingDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<BookingModel>>> GetAll()
     {
         var bookings = await bookingService.GetAllBookingsAsync();
         return Ok(bookings);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<BookingDto>> GetById(int id)
+    public async Task<ActionResult<BookingModel>> GetById(int id)
     {
         var booking = await bookingService.GetBookingByIdAsync(id);
         if (booking == null)
@@ -33,7 +33,7 @@ public class BookingsController(IBookingService bookingService, IUserContext use
     }
 
     [HttpGet("my")]
-    public async Task<ActionResult<IEnumerable<BookingDto>>> GetMyBookings()
+    public async Task<ActionResult<IEnumerable<BookingModel>>> GetMyBookings()
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
@@ -44,7 +44,7 @@ public class BookingsController(IBookingService bookingService, IUserContext use
     }
 
     [HttpPost]
-    public async Task<ActionResult<BookingDto>> Create([FromBody] CreateBookingDto dto)
+    public async Task<ActionResult<BookingModel>> Create([FromBody] CreateBookingModel model)
     {
         var userId = userContext.UserId;
         if (string.IsNullOrEmpty(userId))
@@ -52,7 +52,7 @@ public class BookingsController(IBookingService bookingService, IUserContext use
 
         try
         {
-            var booking = await bookingService.CreateBookingAsync(userId, dto);
+            var booking = await bookingService.CreateBookingAsync(userId, model);
             return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
         }
         catch (InvalidOperationException ex)
@@ -63,9 +63,9 @@ public class BookingsController(IBookingService bookingService, IUserContext use
 
     [HttpPut("{id:int}/status")]
     [Authorize(Roles = "Administrator")]
-    public async Task<ActionResult<BookingDto>> UpdateStatus(int id, [FromBody] UpdateBookingStatusDto dto)
+    public async Task<ActionResult<BookingModel>> UpdateStatus(int id, [FromBody] UpdateBookingStatusModel model)
     {
-        var booking = await bookingService.UpdateBookingStatusAsync(id, dto);
+        var booking = await bookingService.UpdateBookingStatusAsync(id, model);
         if (booking == null)
             return NotFound();
         return Ok(booking);

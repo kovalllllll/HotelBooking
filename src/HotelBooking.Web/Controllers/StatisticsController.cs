@@ -1,4 +1,4 @@
-﻿using HotelBooking.Application.DTOs;
+﻿﻿using HotelBooking.Application.Models;
 using HotelBooking.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ namespace HotelBooking.Web.Controllers;
 public class StatisticsController(IStatisticsRepository statisticsRepository) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<BookingStatisticsDto>> GetStatistics(
+    public async Task<ActionResult<BookingStatisticsModel>> GetStatistics(
         [FromQuery] DateTime? startDate = null,
         [FromQuery] DateTime? endDate = null)
     {
