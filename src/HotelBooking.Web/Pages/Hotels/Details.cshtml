@@ -6,57 +6,101 @@
 
 @if (Model.Hotel == null)
 {
-    <div class="max-w-2xl mx-auto text-center py-12">
-        <div class="text-6xl mb-4">😕</div>
-        <h1 class="text-2xl font-bold text-gray-800">Готель не знайдено</h1>
-        <a href="/" class="text-blue-600 hover:underline mt-4 inline-block">← Повернутися до списку</a>
+    <div class="max-w-2xl mx-auto text-center py-16">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="text-5xl">😕</span>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Готель не знайдено</h1>
+        <p class="text-gray-500 mb-6">На жаль, запитаний готель не існує або був видалений.</p>
+        <a href="/" class="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-semibold">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Повернутися до списку
+        </a>
     </div>
 }
 else
 {
     <div class="max-w-6xl mx-auto">
         <!-- Hotel Header -->
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-            <img src="@(Model.Hotel.ImageUrl ?? "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200")"
-                 alt="@Model.Hotel.Name" class="w-full h-64 object-cover">
-            <div class="p-6">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <div>
-                        <h1 class="text-3xl font-bold text-gray-800 mb-2">@Model.Hotel.Name</h1>
-                        <p class="text-gray-600">📍 @Model.Hotel.City, @Model.Hotel.Address</p>
-                    </div>
-                    <div class="flex text-yellow-400 text-2xl mt-2 md:mt-0">
-                        @for (int i = 0; i < Model.Hotel.StarRating; i++)
-                        {
-                            <span>⭐</span>
-                        }
+        <div class="glass-effect rounded-3xl shadow-xl overflow-hidden mb-8 border border-gray-100">
+            <div class="relative">
+                <img src="@(Model.Hotel.ImageUrl ?? "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200")"
+                     alt="@Model.Hotel.Name" class="w-full h-72 md:h-96 object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+                    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                        <div class="text-white">
+                            <div class="flex text-yellow-400 text-xl mb-2">
+                                @for (int i = 0; i < Model.Hotel.StarRating; i++)
+                                {
+                                    <span>⭐</span>
+                                }
+                            </div>
+                            <h1 class="text-3xl md:text-4xl font-bold mb-2">@Model.Hotel.Name</h1>
+                            <p class="flex items-center gap-2 text-white/80">
+                                <span class="text-lg">📍</span> @Model.Hotel.City, @Model.Hotel.Address
+                            </p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl text-white">
+                                <div class="text-xs opacity-80">Номерів</div>
+                                <div class="text-xl font-bold">@Model.Rooms.Count()</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p class="text-gray-600">@Model.Hotel.Description</p>
+            </div>
+            <div class="p-6 md:p-8">
+                <h2 class="text-lg font-semibold text-gray-800 mb-2">Про готель</h2>
+                <p class="text-gray-600 leading-relaxed">@Model.Hotel.Description</p>
             </div>
         </div>
 
         <!-- Success/Error Messages -->
         @if (!string.IsNullOrEmpty(Model.SuccessMessage))
         {
-            <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 rounded">
-                <p class="text-green-700">✅ @Model.SuccessMessage</p>
+            <div class="glass-effect bg-emerald-50 border border-emerald-200 p-5 mb-8 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                    <span class="text-2xl">✅</span>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-emerald-800">Успішно!</h4>
+                    <p class="text-emerald-700">@Model.SuccessMessage</p>
+                </div>
             </div>
         }
         @if (!string.IsNullOrEmpty(Model.ErrorMessage))
         {
-            <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded">
-                <p class="text-red-700">❌ @Model.ErrorMessage</p>
+            <div class="glass-effect bg-red-50 border border-red-200 p-5 mb-8 rounded-2xl flex items-center gap-4">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <span class="text-2xl">❌</span>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-red-800">Помилка</h4>
+                    <p class="text-red-700">@Model.ErrorMessage</p>
+                </div>
             </div>
         }
 
         <!-- Rooms Section -->
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">🛏️ Доступні номери</h2>
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center shadow-lg">
+                <span class="text-2xl">🛏️</span>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Доступні номери</h2>
+                <p class="text-gray-500">Оберіть номер та забронюйте онлайн</p>
+            </div>
+        </div>
 
         @if (!Model.Rooms.Any())
         {
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-                <p class="text-yellow-700">На жаль, зараз немає доступних номерів.</p>
+            <div class="glass-effect border border-amber-200 bg-amber-50/50 p-8 rounded-2xl text-center">
+                <div class="text-4xl mb-3">😔</div>
+                <h3 class="text-lg font-semibold text-gray-700">На жаль, зараз немає доступних номерів</h3>
+                <p class="text-gray-500 mt-2">Спробуйте пошукати інші готелі або поверніться пізніше.</p>
             </div>
         }
         else
@@ -64,31 +108,38 @@ else
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 @foreach (var room in Model.Rooms)
                 {
-                    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300">
+                    <div class="glass-effect rounded-2xl shadow-lg p-6 border border-gray-100 card-hover">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-800">Номер @room.RoomNumber</h3>
-                                <span
-                                    class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full mt-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-lg">🚪</span>
+                                    <h3 class="text-xl font-bold text-gray-800">Номер @room.RoomNumber</h3>
+                                </div>
+                                <span class="inline-flex items-center gap-1.5 gradient-bg text-white text-sm px-4 py-1.5 rounded-full">
                                     @room.RoomTypeName
                                 </span>
                             </div>
                             <div class="text-right">
-                                <span
-                                    class="text-2xl font-bold text-green-600">@room.PricePerNight.ToString("N0") ₴</span>
-                                <span class="text-gray-500 text-sm block">/ніч</span>
+                                <span class="text-3xl font-bold gradient-text">@room.PricePerNight.ToString("N0")</span>
+                                <span class="text-gray-400 text-sm block">₴ / ніч</span>
                             </div>
                         </div>
-                        <p class="text-gray-600 mb-3">@room.Description</p>
-                        <div class="flex items-center gap-4 text-gray-500 text-sm mb-4">
-                            <span>👥 До @room.Capacity гостей</span>
+                        <p class="text-gray-600 mb-4">@room.Description</p>
+                        <div class="flex flex-wrap items-center gap-3 mb-4">
+                            <span class="inline-flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-lg text-sm text-gray-600">
+                                <span>👥</span> До @room.Capacity гостей
+                            </span>
                             @if (room.IsAvailable)
                             {
-                                <span class="text-green-600">✓ Доступний</span>
+                                <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-600 px-3 py-1.5 rounded-lg text-sm border border-emerald-200">
+                                    <span>✓</span> Доступний
+                                </span>
                             }
                             else
                             {
-                                <span class="text-red-600">✗ Зайнятий</span>
+                                <span class="inline-flex items-center gap-1.5 bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-sm border border-red-200">
+                                    <span>✗</span> Зайнятий
+                                </span>
                             }
                         </div>
 
@@ -96,50 +147,49 @@ else
                         {
                             <div x-data="{ showForm: false }" class="mt-4">
                                 <button @@click="showForm = !showForm"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                                    <span x-show="!showForm">Забронювати</span>
+                                        class="w-full btn-gradient text-white font-semibold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                                    <span x-show="!showForm">🎫 Забронювати</span>
                                     <span x-show="showForm">Приховати форму</span>
                                 </button>
 
-                                <form method="post" x-show="showForm" x-transition class="mt-4 space-y-3 border-t pt-4">
+                                <form method="post" x-show="showForm" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" class="mt-5 space-y-4 border-t border-gray-100 pt-5">
                                     <input type="hidden" name="roomId" value="@room.Id"/>
-                                    <div class="grid grid-cols-2 gap-3">
+                                    <div class="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Дата
-                                                заїзду</label>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">📅 Дата заїзду</label>
                                             <input type="date" name="checkIn" required
                                                    min="@DateTime.Today.ToString("yyyy-MM-dd")"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50">
                                         </div>
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">Дата
-                                                виїзду</label>
+                                            <label class="block text-sm font-semibold text-gray-700 mb-2">📅 Дата виїзду</label>
                                             <input type="date" name="checkOut" required
                                                    min="@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")"
-                                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                                   class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50">
                                         </div>
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Кількість
-                                            гостей</label>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">👥 Кількість гостей</label>
                                         <select name="guests"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                                class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50">
                                             @for (var i = 1; i <= room.Capacity; i++)
                                             {
-                                                <option value="@i">@i</option>
+                                                <option value="@i">@i @(i == 1 ? "гість" : i < 5 ? "гості" : "гостей")</option>
                                             }
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Особливі
-                                            побажання</label>
+                                        <label class="block text-sm font-semibold text-gray-700 mb-2">📝 Особливі побажання</label>
                                         <textarea name="specialRequests" rows="2"
-                                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                                  class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
                                                   placeholder="Наприклад: пізній заїзд, дитяче ліжечко..."></textarea>
                                     </div>
                                     <button type="submit"
-                                            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
-                                        ✓ Підтвердити бронювання
+                                            class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        Підтвердити бронювання
                                     </button>
                                 </form>
                             </div>
@@ -147,8 +197,8 @@ else
                         else if (!User.Identity?.IsAuthenticated == true)
                         {
                             <a href="/Login"
-                               class="block w-full text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition duration-200">
-                                Увійдіть, щоб забронювати
+                               class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-xl transition-colors duration-200 mt-4">
+                                🔐 Увійдіть, щоб забронювати
                             </a>
                         }
                     </div>
@@ -156,8 +206,13 @@ else
             </div>
         }
 
-        <div class="mt-8">
-            <a href="/" class="text-blue-600 hover:underline">← Повернутися до списку готелів</a>
+        <div class="mt-10">
+            <a href="/" class="inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 font-semibold transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Повернутися до списку готелів
+            </a>
         </div>
     </div>
 }

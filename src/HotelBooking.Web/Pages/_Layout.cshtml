@@ -7,27 +7,114 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                        'pulse-slow': 'pulse 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': {opacity: '0'},
+                            '100%': {opacity: '1'},
+                        },
+                        slideUp: {
+                            '0%': {opacity: '0', transform: 'translateY(20px)'},
+                            '100%': {opacity: '1', transform: 'translateY(0)'},
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px -10px rgba(102, 126, 234, 0.5);
+        }
+
+        .input-modern {
+            transition: all 0.3s ease;
+        }
+
+        .input-modern:focus {
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gradient-to-br from-slate-50 via-white to-purple-50 min-h-screen font-sans">
 <!-- Navigation -->
-<nav class="bg-white shadow-lg" x-data="{ mobileMenuOpen: false }">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex justify-between h-16">
+<nav class="glass-effect sticky top-0 z-50 border-b border-gray-100" x-data="{ mobileMenuOpen: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20">
             <div class="flex items-center">
-                <a href="/" class="flex items-center">
-                    <span class="text-2xl">🏨</span>
-                    <span class="ml-2 text-xl font-bold text-gray-800">Hotel Booking</span>
+                <a href="/" class="flex items-center group">
+                    <div
+                        class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <span class="text-2xl">🏨</span>
+                    </div>
+                    <div class="ml-3">
+                        <span class="text-xl font-bold gradient-text">HotelBooking</span>
+                        <span class="block text-xs text-gray-400 font-medium">Найкращі готелі України</span>
+                    </div>
                 </a>
-                <div class="hidden md:flex ml-10 space-x-4">
-                    <a href="/" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium">Готелі</a>
+                <div class="hidden md:flex ml-12 space-x-2">
+                    <a href="/"
+                       class="text-gray-600 hover:text-purple-600 px-4 py-2 rounded-xl font-medium hover:bg-purple-50 transition-all duration-200">
+                        <span class="mr-1">🏠</span> Готелі
+                    </a>
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <a href="/Bookings" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium">Мої
-                            бронювання</a>
+                        <a href="/Bookings"
+                           class="text-gray-600 hover:text-purple-600 px-4 py-2 rounded-xl font-medium hover:bg-purple-50 transition-all duration-200">
+                            <span class="mr-1">📋</span> Мої бронювання
+                        </a>
                         @if (User.IsInRole("Administrator"))
                         {
-                            <a href="/Admin" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium">Адмін
-                                панель</a>
+                            <a href="/Admin"
+                               class="text-gray-600 hover:text-purple-600 px-4 py-2 rounded-xl font-medium hover:bg-purple-50 transition-all duration-200">
+                                <span class="mr-1">⚙️</span> Адмін панель
+                            </a>
                         }
                     }
                 </div>
@@ -35,10 +122,16 @@
             <div class="hidden md:flex items-center space-x-4">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <span class="text-gray-600">👤 @User.Identity.Name</span>
+                    <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
+                        <div
+                            class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            @(User.Identity.Name?.Substring(0, 1).ToUpper())
+                        </div>
+                        <span class="ml-2 text-gray-700 font-medium">@User.Identity.Name</span>
+                    </div>
                     <form method="post" asp-page="/Logout">
                         <button type="submit"
-                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition duration-200">
+                                class="bg-red-50 hover:bg-red-100 text-red-600 px-5 py-2.5 rounded-xl font-medium transition-all duration-200 border border-red-100 hover:border-red-200">
                             Вийти
                         </button>
                     </form>
@@ -46,51 +139,124 @@
                 else
                 {
                     <a href="/Login"
-                       class="text-gray-600 hover:text-blue-600 px-4 py-2 rounded-lg font-medium">Увійти</a>
+                       class="text-gray-600 hover:text-purple-600 px-5 py-2.5 rounded-xl font-medium hover:bg-purple-50 transition-all duration-200">
+                        Увійти
+                    </a>
                     <a href="/Register"
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition duration-200">
+                       class="btn-gradient text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg">
                         Реєстрація
                     </a>
                 }
             </div>
             <!-- Mobile menu button -->
             <div class="md:hidden flex items-center">
-                <button @@click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-600 hover:text-gray-800">
+                <button @@click="mobileMenuOpen = !mobileMenuOpen"
+                        class="text-gray-600 hover:text-purple-600 p-2 rounded-xl hover:bg-purple-50 transition-colors">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M4 6h16M4 12h16M4 18h16"/>
+                        <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
         </div>
     </div>
     <!-- Mobile menu -->
-    <div x-show="mobileMenuOpen" class="md:hidden bg-white border-t">
-        <div class="px-2 pt-2 pb-3 space-y-1">
-            <a href="/" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium">Готелі</a>
+    <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+         class="md:hidden glass-effect border-t border-gray-100">
+        <div class="px-4 pt-4 pb-6 space-y-2">
+            <a href="/"
+               class="flex items-center text-gray-600 hover:text-purple-600 px-4 py-3 rounded-xl font-medium hover:bg-purple-50 transition-all">
+                <span class="mr-2">🏠</span> Готелі
+            </a>
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <a href="/Bookings" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium">Мої
-                    бронювання</a>
+                <a href="/Bookings"
+                   class="flex items-center text-gray-600 hover:text-purple-600 px-4 py-3 rounded-xl font-medium hover:bg-purple-50 transition-all">
+                    <span class="mr-2">📋</span> Мої бронювання
+                </a>
                 @if (User.IsInRole("Administrator"))
                 {
-                    <a href="/Admin" class="block text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium">Адмін
-                        панель</a>
+                    <a href="/Admin"
+                       class="flex items-center text-gray-600 hover:text-purple-600 px-4 py-3 rounded-xl font-medium hover:bg-purple-50 transition-all">
+                        <span class="mr-2">⚙️</span> Адмін панель
+                    </a>
                 }
+
+                <div class="pt-4 border-t border-gray-100 mt-4">
+                    <div class="flex items-center px-4 py-2 text-gray-600">
+                        <div
+                            class="w-8 h-8 gradient-bg rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            @(User.Identity.Name?.Substring(0, 1).ToUpper())
+                        </div>
+                        <span class="ml-2 font-medium">@User.Identity.Name</span>
+                    </div>
+                    <form method="post" asp-page="/Logout" class="mt-2">
+                        <button type="submit"
+                                class="w-full bg-red-50 text-red-600 px-4 py-3 rounded-xl font-medium transition-colors hover:bg-red-100">
+                            Вийти
+                        </button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="pt-4 border-t border-gray-100 mt-4 space-y-2">
+                    <a href="/Login"
+                       class="block text-center text-gray-600 px-4 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors">
+                        Увійти
+                    </a>
+                    <a href="/Register"
+                       class="block text-center btn-gradient text-white px-4 py-3 rounded-xl font-semibold">
+                        Реєстрація
+                    </a>
+                </div>
             }
         </div>
     </div>
 </nav>
 
 <!-- Main Content -->
-<main class="py-8 px-4">
+<main class="py-8 px-4 animate-fade-in">
     @RenderBody()
 </main>
 
 <!-- Footer -->
-<footer class="bg-white border-t mt-12">
-    <div class="max-w-7xl mx-auto py-6 px-4">
-        <p class="text-center text-gray-500">© 2024 Hotel Booking. Всі права захищено.</p>
+<footer class="glass-effect border-t border-gray-100 mt-16">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div>
+                <div class="flex items-center mb-4">
+                    <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-xl">🏨</span>
+                    </div>
+                    <span class="ml-3 text-xl font-bold gradient-text">HotelBooking</span>
+                </div>
+                <p class="text-gray-500 text-sm">Знаходьте та бронюйте найкращі готелі України швидко та зручно.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold text-gray-800 mb-4">Швидкі посилання</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/" class="text-gray-500 hover:text-purple-600 transition-colors">Готелі</a></li>
+                    <li><a href="/Bookings" class="text-gray-500 hover:text-purple-600 transition-colors">Мої
+                            бронювання</a></li>
+                    <li><a href="/Login" class="text-gray-500 hover:text-purple-600 transition-colors">Увійти</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold text-gray-800 mb-4">Контакти</h4>
+                <ul class="space-y-2 text-sm text-gray-500">
+                    <li class="flex items-center"><span class="mr-2">📍</span> Київ, Україна</li>
+                    <li class="flex items-center"><span class="mr-2">📞</span> +380 (44) 123-45-67</li>
+                    <li class="flex items-center"><span class="mr-2">✉️</span> info@hotelbooking.ua</li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 pt-8">
+            <p class="text-center text-gray-400 text-sm">© 2024 HotelBooking. Всі права захищено.</p>
+        </div>
     </div>
 </footer>
 

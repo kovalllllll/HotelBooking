@@ -4,66 +4,121 @@
     ViewData["Title"] = "Реєстрація";
 }
 
-<div class="max-w-md mx-auto">
-    <div class="bg-white rounded-xl shadow-lg p-8">
-        <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">📝 Реєстрація</h1>
+<div class="min-h-[70vh] flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-lg">
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 gradient-bg rounded-2xl shadow-lg mb-4">
+                <span class="text-3xl">📝</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800">Реєстрація</h1>
+            <p class="text-gray-500 mt-2">Створіть акаунт та почніть бронювати готелі</p>
+        </div>
         
-        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-        {
-            <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-4 rounded">
-                <p class="text-red-700">@Model.ErrorMessage</p>
-            </div>
-        }
+        <div class="glass-effect rounded-2xl shadow-xl p-8 border border-gray-100">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="bg-red-50 border border-red-200 p-4 mb-6 rounded-xl flex items-start gap-3">
+                    <span class="text-red-500 text-xl">⚠️</span>
+                    <p class="text-red-700 text-sm">@Model.ErrorMessage</p>
+                </div>
+            }
 
-        <form method="post" class="space-y-4">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ім'я</label>
-                    <input type="text" asp-for="Input.FirstName" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <span asp-validation-for="Input.FirstName" class="text-red-500 text-sm"></span>
+            <form method="post" class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Ім'я</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                            <input type="text" asp-for="Input.FirstName" required
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
+                                   placeholder="Іван">
+                        </div>
+                        <span asp-validation-for="Input.FirstName" class="text-red-500 text-sm mt-1 block"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Прізвище</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">👤</span>
+                            <input type="text" asp-for="Input.LastName" required
+                                   class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
+                                   placeholder="Петренко">
+                        </div>
+                        <span asp-validation-for="Input.LastName" class="text-red-500 text-sm mt-1 block"></span>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Прізвище</label>
-                    <input type="text" asp-for="Input.LastName" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <span asp-validation-for="Input.LastName" class="text-red-500 text-sm"></span>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email адреса</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">✉️</span>
+                        <input type="email" asp-for="Input.Email" required
+                               class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
+                               placeholder="your@email.com">
+                    </div>
+                    <span asp-validation-for="Input.Email" class="text-red-500 text-sm mt-1 block"></span>
                 </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" asp-for="Input.Email" required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       placeholder="your@email.com">
-                <span asp-validation-for="Input.Email" class="text-red-500 text-sm"></span>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Телефон (необов'язково)</label>
-                <input type="tel" asp-for="Input.PhoneNumber"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       placeholder="+380...">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
-                <input type="password" asp-for="Input.Password" required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                       placeholder="Мінімум 6 символів">
-                <span asp-validation-for="Input.Password" class="text-red-500 text-sm"></span>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Підтвердіть пароль</label>
-                <input type="password" asp-for="Input.ConfirmPassword" required
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <span asp-validation-for="Input.ConfirmPassword" class="text-red-500 text-sm"></span>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200">
-                Зареєструватися
-            </button>
-        </form>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Телефон 
+                        <span class="text-gray-400 font-normal">(необов'язково)</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📞</span>
+                        <input type="tel" asp-for="Input.PhoneNumber"
+                               class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
+                               placeholder="+380 XX XXX XX XX">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Пароль</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔒</span>
+                        <input type="password" asp-for="Input.Password" required
+                               class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
+                               placeholder="Мінімум 6 символів">
+                    </div>
+                    <span asp-validation-for="Input.Password" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Підтвердіть пароль</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔐</span>
+                        <input type="password" asp-for="Input.ConfirmPassword" required
+                               class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50"
+                               placeholder="Повторіть пароль">
+                    </div>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-red-500 text-sm mt-1 block"></span>
+                </div>
+                <button type="submit" class="w-full btn-gradient text-white font-semibold py-4 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-lg">
+                    <span>Створити акаунт</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                    </svg>
+                </button>
+            </form>
 
-        <div class="mt-6 text-center">
-            <p class="text-gray-600">Вже маєте акаунт? <a href="/Login" class="text-blue-600 hover:underline font-medium">Увійти</a></p>
+            <div class="mt-8 text-center">
+                <p class="text-gray-600">
+                    Вже маєте акаунт? 
+                    <a href="/Login" class="text-purple-600 hover:text-purple-700 font-semibold hover:underline transition-colors">Увійти</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="mt-8 grid grid-cols-3 gap-4">
+            <div class="glass-effect rounded-xl p-4 text-center border border-gray-100">
+                <span class="text-2xl">🔒</span>
+                <p class="text-xs text-gray-500 mt-2">Безпечні дані</p>
+            </div>
+            <div class="glass-effect rounded-xl p-4 text-center border border-gray-100">
+                <span class="text-2xl">⚡</span>
+                <p class="text-xs text-gray-500 mt-2">Швидке бронювання</p>
+            </div>
+            <div class="glass-effect rounded-xl p-4 text-center border border-gray-100">
+                <span class="text-2xl">💎</span>
+                <p class="text-xs text-gray-500 mt-2">Ексклюзивні ціни</p>
+            </div>
         </div>
     </div>
 </div>
-

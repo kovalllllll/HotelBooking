@@ -4,28 +4,57 @@
     ViewData["Title"] = "Готелі";
 }
 
+<!-- Hero Section -->
+<div class="relative max-w-7xl mx-auto mb-12">
+    <div class="gradient-bg rounded-3xl p-8 md:p-12 text-white overflow-hidden relative">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        <div class="relative z-10">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">Знайдіть ідеальний готель ✨</h1>
+            <p class="text-white/80 text-lg mb-8 max-w-2xl">Відкрийте для себе найкращі готелі України. Від затишних бутік-готелів до розкішних курортів — усе в одному місці.</p>
+        </div>
+    </div>
+</div>
+
 <div class="max-w-7xl mx-auto">
     <!-- Search Section -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">🔍 Пошук номерів</h2>
+    <div class="glass-effect rounded-2xl shadow-xl p-6 md:p-8 mb-12 border border-gray-100 -mt-8 relative z-20 mx-4 md:mx-0">
+        <div class="flex items-center gap-2 mb-6">
+            <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                <span class="text-xl">🔍</span>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800">Пошук номерів</h2>
+        </div>
         <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Місто</label>
-                <input type="text" name="city" value="@Model.City" placeholder="Введіть місто..."
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Місто</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📍</span>
+                    <input type="text" name="city" value="@Model.City" placeholder="Введіть місто..."
+                           class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50">
+                </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Дата заїзду</label>
-                <input type="date" name="checkIn" value="@Model.CheckIn?.ToString("yyyy-MM-dd")"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Дата заїзду</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📅</span>
+                    <input type="date" name="checkIn" value="@Model.CheckIn?.ToString("yyyy-MM-dd")"
+                           class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50">
+                </div>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Дата виїзду</label>
-                <input type="date" name="checkOut" value="@Model.CheckOut?.ToString("yyyy-MM-dd")"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Дата виїзду</label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">📅</span>
+                    <input type="date" name="checkOut" value="@Model.CheckOut?.ToString("yyyy-MM-dd")"
+                           class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent input-modern bg-gray-50/50">
+                </div>
             </div>
             <div class="flex items-end">
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">
+                <button type="submit" class="w-full btn-gradient text-white font-semibold py-3 px-6 rounded-xl shadow-lg flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
                     Знайти
                 </button>
             </div>
@@ -33,42 +62,62 @@
     </div>
 
     <!-- Hotels List -->
-    <h2 class="text-3xl font-bold text-gray-800 mb-6">🏨 Наші готелі</h2>
+    <div class="flex items-center gap-3 mb-8">
+        <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center shadow-lg">
+            <span class="text-2xl">🏨</span>
+        </div>
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800">Наші готелі</h2>
+            <p class="text-gray-500">Оберіть найкращий варіант для вашого відпочинку</p>
+        </div>
+    </div>
     
     @if (!Model.Hotels.Any())
     {
-        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-            <p class="text-yellow-700">Готелі не знайдено. Спробуйте змінити параметри пошуку.</p>
+        <div class="glass-effect border border-yellow-200 bg-yellow-50/50 p-8 rounded-2xl text-center">
+            <div class="text-5xl mb-4">🔍</div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">Готелі не знайдено</h3>
+            <p class="text-gray-500">Спробуйте змінити параметри пошуку або перегляньте всі готелі.</p>
         </div>
     }
     else
     {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach (var hotel in Model.Hotels)
             {
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                    <img src="@(hotel.ImageUrl ?? "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800")" 
-                         alt="@hotel.Name" class="w-full h-48 object-cover">
-                    <div class="p-5">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-xl font-bold text-gray-800">@hotel.Name</h3>
-                            <div class="flex text-yellow-400">
+                <div class="glass-effect rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 group">
+                    <div class="relative overflow-hidden">
+                        <img src="@(hotel.ImageUrl ?? "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800")" 
+                             alt="@hotel.Name" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
+                            <div class="flex text-yellow-400 text-sm">
                                 @for (int i = 0; i < hotel.StarRating; i++)
                                 {
                                     <span>⭐</span>
                                 }
                             </div>
                         </div>
-                        <p class="text-gray-600 text-sm mb-2">📍 @hotel.City, @hotel.Address</p>
-                        <p class="text-gray-500 text-sm mb-4 line-clamp-2">@hotel.Description</p>
-                        <div class="flex items-center justify-between">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-purple-600 transition-colors">@hotel.Name</h3>
+                        <p class="text-gray-500 text-sm mb-2 flex items-center">
+                            <span class="mr-1">📍</span> @hotel.City, @hotel.Address
+                        </p>
+                        <p class="text-gray-400 text-sm mb-4 line-clamp-2">@hotel.Description</p>
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                             <div>
-                                <span class="text-sm text-gray-500">від</span>
-                                <span class="text-xl font-bold text-green-600">@(hotel.MinPrice?.ToString("N0") ?? "—") ₴</span>
-                                <span class="text-sm text-gray-500">/ніч</span>
+                                <span class="text-xs text-gray-400 uppercase tracking-wider">від</span>
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-2xl font-bold gradient-text">@(hotel.MinPrice?.ToString("N0") ?? "—")</span>
+                                    <span class="text-gray-400 text-sm">₴/ніч</span>
+                                </div>
                             </div>
-                            <a href="/Hotels/@hotel.Id" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200">
+                            <a href="/Hotels/@hotel.Id" class="btn-gradient text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg flex items-center gap-2">
                                 Переглянути
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
                             </a>
                         </div>
                     </div>
